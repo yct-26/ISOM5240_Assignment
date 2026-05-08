@@ -40,18 +40,20 @@ def main():
     story_text = text2story(scenario)
     st.write(f"**Story:** {story}")
     audio_data = text2audio(story_text)
+    return audio_data
 
 
 # Execute main() if there is an uploaded file
 if uploaded_file is not None:
-    main()
+    audio_data = main()
+    # Setting up a Play button
+    if st.button("Play Audio"):
+        audio_array = audio_data["audio"]
+        sample_rate = audio_data["sampling_rate"]
+        st.audio(audio_array, sample_rate=sample_rate)
 
 
-# Setting up a Play button
-if st.button("Play Audio"):
-    audio_array = audio_data["audio"]
-    sample_rate = audio_data["sampling_rate"]
-    st.audio(audio_array, sample_rate=sample_rate)
+
    
 
 
