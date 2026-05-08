@@ -26,20 +26,32 @@ def text2story(text):
     return story
 
 # Defining a function to transform story to speech/audio
-def text2audio(story):
+def text2audio(story_text):
     audio_pipe = pipeline("text-to-audio", 
                           model="Matthijs/mms-tts-eng")
-    audio_data = audio_pipe(story)
+    audio_data = audio_pipe(story_text)
     return audio_data
 
 
 # Defining a main function to execute all the sub-functions
 def main():    
+    # Saving the uploaded file locally
+    bytes_data = uploaded_file.getvalue()
+    with open(uploaded_file.name, "wb") as file:
+        file.write(bytes_data)
+    st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
+
+    # 1) Image to Text
     scenario = img2text(uploaded_file.name)
     st.write(f"**Scenario:** {scenario}")
+
+    # 2) Text to Story
     story_text = text2story(scenario)
     st.write(f"**Story:** {story}")
+
+    # 3) Story to Audio
     audio_data = text2audio(story_text)
+    
     return audio_data
 
 
