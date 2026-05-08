@@ -28,9 +28,13 @@ def text2story(text):
                                 do_sample = True, 
                                 no_repeat_ngram_size=2,  # Prevents looping
                                 repetition_penalty=1.2)
-    
+
+    # Extract full text and remove prompt component to isolate the story
     full_text = story_results[0]['generated_text']
-    story = full_text[len(prompt):].strip()
+    if prompt in full_text:
+        story = full_text.split(prompt)[-1].strip()
+    else:
+        story = full_text.strip()
     return story
 
 # Defining a function to transform the generated story to speech/audio format
