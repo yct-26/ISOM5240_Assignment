@@ -43,23 +43,22 @@ def main():
     
     # Check if we already have the data in session state to avoid re-running
     if 'audio_data' not in st.session_state:
-        with st.status("Generating story and audio...", expanded=True) as status:
-            # Saving the uploaded file locally
-            bytes_data = uploaded_file.getvalue()
-            with open(uploaded_file.name, "wb") as file:
-                file.write(bytes_data)
+        # Saving the uploaded file locally
+        bytes_data = uploaded_file.getvalue()
+        with open(uploaded_file.name, "wb") as file:
+            file.write(bytes_data)
 
-            # 1) Image to Text
-            scenario = img2text(uploaded_file.name)
-            st.session_state['scenario'] = scenario
+        # 1) Image to Text
+        scenario = img2text(uploaded_file.name)
+        st.session_state['scenario'] = scenario
 
-            # 2) Text to Story
-            story_text = text2story(scenario)
-            st.session_state['story_text'] = story_text
+        # 2) Text to Story
+        story_text = text2story(scenario)
+        st.session_state['story_text'] = story_text
 
-            # 3) Story to Audio
-            audio_data = text2audio(story_text)
-            st.session_state['audio_data'] = audio_data
+        # 3) Story to Audio
+        audio_data = text2audio(story_text)
+        st.session_state['audio_data'] = audio_data
 
     # Displaying generated story
     st.write(f"**Scenario:** {st.session_state['scenario']}")
