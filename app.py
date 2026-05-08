@@ -23,10 +23,10 @@ def text2story(text):
                           model="pranavpsv/genre-story-generator-v2")
 
     # Writing a prompt to ensure that the generated story is suitable for the target audience
-    prompt = f"Write a child-friendly story for ages 3-10 about {text}. The story should be directly related to the topic."
+    prompt = f"Children's story (ages 3-10) about {text}. Focus on topic."
     story_results = story_pipe(prompt, 
-                               min_new_tokens = 60,      # An output range of 60-120 tokens generally results in a story that is 50-100 words long.
-                               max_new_tokens = 120,
+                               min_new_tokens = 75,      # Accounting for the tokens in the prompt, a range of 75-150 tokens should result in a story that is 50-100 words long.
+                               max_new_tokens = 150,
                                temperature = 0.8)        # Temperature set to 0.8 to make the story more focused on caption.
     
     # Extracting the generated output
