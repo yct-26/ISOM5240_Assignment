@@ -23,10 +23,10 @@ def text2story(text):
                             model="pranavpsv/genre-story-generator-v2")
     story_results = story_pipe(text)
     story = story_results[0]['generated_text']
-    return story_text
+    return story
 
 # Defining a function to transform story to speech/audio
-def text2audio(story_text):
+def text2audio(story):
     audio_pipe = pipeline("text-to-audio", 
                           model="Matthijs/mms-tts-eng")
     audio_data = audio_pipe(story)
