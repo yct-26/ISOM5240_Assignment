@@ -19,30 +19,25 @@ def img2text(url):
 
 # Defining a function to generate a story from the extracted text
 def text2story(text):
-   story_model = pipeline("text-generation", model="pranavpsv/genre-story-generator-v2")
+   story_model = pipeline("text-generation", 
+                          model="pranavpsv/genre-story-generator-v2")
    prompt = f"Write a story for children about {text}:"
-
    story_results = story_model(prompt,
                               min_new_tokens=70,
                               max_new_tokens=120,
                               do_sample=True,
-                              repetition_penalty=1.2
-                          )
-
+                              repetition_penalty=1.2)
+   # Removing the prompt from the generated output
    full_text = story_results[0]['generated_text']
-    
-    # Clean output
    story = full_text.replace(prompt, "").strip()
-    
    return story
 
 
 # Defining a function to transform the generated story to speech/audio format
 def text2audio(story_text):
-    # This pipeline occasionally crashes when there is an error in the input. This condition implements an error-handling feature when this occurs.
+    # This pipeline occasionally crashes when there is an error in its input. This condition implements an error-handling feature when this occurs.
     if not story_text or len(story_text.strip()) < 5:
         return None
-        
     audio_model = pipeline("text-to-audio", 
                            model="Matthijs/mms-tts-eng")
     audio_data = audio_model(story_text)
@@ -79,17 +74,16 @@ def main():
     return st.session_state['audio_data']
 
 
-# Execute main() if there is an uploaded file
+# Execute main() if there is an uploaded image file
 if uploaded_file is not None:
     audio_data = main()
 
-    # The conditional Play Audio button
+    # Conditional Play Audio button
     if st.button("Play Audio"):
        
-        # CHANGE 2: Ensure audio_data exists before trying to play it
-        if audio_data is not None:
+        # Ensure that the story generation process was successful and audio data actually exists. If so, play the audio. Otherwise, display an error message.
             audio_array = audio_data["audio"]
             sample_rate = audio_data["sampling_rate"]
             st.audio(audio_array, sample_rate=sample_rate)
         else:
-            st.error("The generated story was too short to create audio. Please refresh and try again.")
+            st.error("There was an error when generating the story. Please refresh and try again.")
