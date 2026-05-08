@@ -26,7 +26,7 @@ def text2story(text):
                                 max_new_tokens=130, # Slightly over 100 words to allow for buffer
                                 num_beams=4,
                                 length_penalty=1.0, # Adjust this to 0.8 for shorter, 1.2 for longer
-                                early_stopping=True)
+                                do_sample = True)
     
     full_text = story_results[0]['generated_text']
     story = full_text[len(prompt):].strip()
