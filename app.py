@@ -47,7 +47,7 @@ def main():
 
     # 2) Text to Story
     story_text = text2story(scenario)
-    st.write(f"**Story:** {story}")
+    st.write(f"**Story:** {story_text}")
 
     # 3) Story to Audio
     audio_data = text2audio(story_text)
