@@ -23,21 +23,20 @@ def text2story(text):
     
     # We use a very standard "storytelling" prefix. 
     # This triggers the model's "fairytale" training weights.
-    prompt = f"{text}. Once upon a time,"
+   prompt = f"{text}. Once upon a time,"
 
-    story_results = story_model(
-        prompt,
-        min_new_tokens=70,
-        max_new_tokens=120,
-        do_sample=True,
-        # SETTINGS FOR A YOUNGER VOICE:
-        temperature=0.6,      # Lower temp makes it more "grounded" and less likely to ramble.
-        top_k=30,             # Sharp limit: Only allow the 30 most common words. 
-                              # This naturally forces a simpler vocabulary.
-        top_p=0.85,           # Focuses the model on high-probability "sensible" sentences.
-        repetition_penalty=1.2,
-        no_repeat_ngram_size=3
-    )
+   story_results = story_model(prompt,
+                              min_new_tokens=70,
+                              max_new_tokens=120,
+                              do_sample=True,
+                              # SETTINGS FOR A YOUNGER VOICE:
+                              temperature=0.6,      # Lower temp makes it more "grounded" and less likely to ramble.
+                              top_k=30,             # Sharp limit: Only allow the 30 most common words. 
+                                                    # This naturally forces a simpler vocabulary.
+                              top_p=0.85,           # Focuses the model on high-probability "sensible" sentences.
+                              repetition_penalty=1.2,
+                              no_repeat_ngram_size=3
+                          )
 
     full_text = story_results[0]['generated_text']
     
