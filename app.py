@@ -23,8 +23,7 @@ def text2story(text):
                            model="pranavpsv/genre-story-generator-v2")
 
     # Writing a suitable prompt for story
-    prompt = f"Children's story (ages 3-10) about {clean_topic}. Focus on topic."
-    
+    prompt = f"Children's story (ages 3-10) about {text}. Focus on topic."
     story = ""
     attempts = 0
     
