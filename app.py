@@ -46,6 +46,7 @@ def text2audio(story_text):
 
 # Defining a main function to execute all the sub-functions
 def main():    
+    st.image(uploaded_file, use_container_width=True)
     # Check if we already have the data in session state to avoid re-running
     if 'audio_data' not in st.session_state:
         # Saving the uploaded file locally
@@ -66,7 +67,6 @@ def main():
         st.session_state['audio_data'] = audio_data
     
     # Display the results from Session State
-    st.image(uploaded_file, use_container_width=True)
     st.write(f"**Scenario:** {st.session_state['scenario']}")
     st.write(f"**Story:** {st.session_state['story_text']}")
 
