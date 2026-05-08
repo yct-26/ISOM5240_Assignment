@@ -23,7 +23,7 @@ def text2story(text):
     
     # We use a very standard "storytelling" prefix. 
     # This triggers the model's "fairytale" training weights.
-   prompt = f"{text}. Once upon a time,"
+   prompt = f"Write a story for children about {text}"
 
    story_results = story_model(prompt,
                               min_new_tokens=70,
@@ -41,7 +41,7 @@ def text2story(text):
    full_text = story_results[0]['generated_text']
     
     # Clean output
-   story = full_text.replace(prompt, "Once upon a time,").strip()
+   story = full_text.replace(prompt).strip()
     
    return story
 
