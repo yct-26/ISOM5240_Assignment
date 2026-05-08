@@ -30,8 +30,7 @@ def text2story(text):
    story_results = story_model(prompt,
                               min_new_tokens=70,
                               max_new_tokens=120,
-                              do_sample=True,
-                              repetition_penalty=1.4)
+                              do_sample=True)
   # Removing the prompt from the generated output
    full_text = story_results[0]['generated_text']
    story = full_text.replace(prompt, "").strip()
