@@ -21,19 +21,33 @@ def img2text(url):
 def text2story(text):
     story_model = pipeline("text-generation", 
                            model="pranavpsv/genre-story-generator-v2")
-    prompt = f"Children's story (ages 3-10) about {text}. Focus on topic."
-    story_results = story_model(prompt,
-                                min_new_tokens = 60,
-                                max_new_tokens=130, # Slightly over 100 words to allow for buffer
-                                do_sample = True)
 
-    # Extract full text and remove prompt component to isolate the story
-    full_text = story_results[0]['generated_text']
-    if prompt in full_text:
-        story = full_text.split(prompt)[-1].strip()
-    else:
-        story = full_text.strip()
+    # Writing a suitable prompt for story
+    prompt = f"Children's story (ages 3-10) about {clean_topic}. Focus on topic."
+    
+    story = ""
+    attempts = 0
+    
+    # Try up to 2 times if the story comes back empty
+    while not story and attempts < 2:
+        story_results = story_model(prompt,
+                                    min_new_tokens=60,
+                                    max_new_tokens=130,
+                                    do_sample=True,
+                                    repetition_penalty=1.2, # FORCES the model to keep moving
+                                    no_repeat_ngram_size=2) # Prevents "The cat the cat the cat"
+        
+        full_text = story_results[0]['generated_text']
+        
+        # Extract story logic
+        if prompt in full_text:
+            story = full_text.split(prompt)[-1].strip()
+        else:
+            story = full_text.strip()
+        attempts += 1
+        
     return story
+
 
 # Defining a function to transform the generated story to speech/audio format
 def text2audio(story_text):
