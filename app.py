@@ -19,7 +19,8 @@ def img2text(url):
 
 # Defining a function to generate a story from the extracted text
 def text2story(text):
-    story_pipe = pipeline("text-generation", model="meta-llama/Llama-3.3-70B-Instruct")
+    story_pipe = pipeline("text-generation", 
+                          model="pranavpsv/genre-story-generator-v2")
 
     # Writing a prompt to ensure that the generated story is suitable for the target audience
     prompt = f"Write a story suitable for children between the ages of 3-10 years old about {text}."
