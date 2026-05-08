@@ -25,8 +25,8 @@ def text2story(text):
     # Writing a prompt to ensure that the generated story is suitable for the target audience
     prompt = f"Children's story (ages 3-10) about {text}. Focus on topic."
     story_results = story_pipe(prompt, 
-                               min_new_tokens = 75,      # Accounting for the tokens in the prompt, a range of 75-150 tokens should result in a story that is 50-100 words long.
-                               max_new_tokens = 150,
+                               min_new_tokens = 60,      # Accounting for the tokens in the prompt, a range of 60-120 tokens should result in a story that is 50-100 words long.
+                               max_new_tokens = 120,
                                temperature = 0.8)        # Temperature set to 0.8 to make the story more focused on caption.
     
     # Extracting the generated output
