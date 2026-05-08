@@ -20,7 +20,7 @@ def img2text(url):
 # Defining a function to generate a story from the extracted text
 def text2story(text):
    story_model = pipeline("text-generation", model="pranavpsv/genre-story-generator-v2")
-   prompt = f"{text}"
+   prompt = f"Write a story for children about {text}"
 
    story_results = story_model(prompt,
                               min_new_tokens=70,
@@ -28,9 +28,6 @@ def text2story(text):
                               do_sample=True,
                               # SETTINGS FOR A YOUNGER VOICE:
                               temperature=0.6,      # Lower temp makes it more "grounded" and less likely to ramble.
-                              top_k=30,             # Sharp limit: Only allow the 30 most common words. 
-                                                    # This naturally forces a simpler vocabulary.
-                              top_p=0.85,           # Focuses the model on high-probability "sensible" sentences.
                               repetition_penalty=1.2,
                               no_repeat_ngram_size=3
                           )
