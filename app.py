@@ -3,11 +3,11 @@ import streamlit as st
 from transformers import pipeline
 
 # Setting headers and titles for the application
-st.set_page_config(page_title="Your Image to Audio Story", page_icon="🧠")
-st.header("Turn Your Image to Audio Story")
+st.set_page_config(page_title="Transform an Image to an Audio Story", page_icon="🧠")
+st.header("Transform Your Image into an Audio Story")
 
 # Adding a file uploader to the application
-uploaded_file = st.file_uploader("Select an Image...")
+uploaded_file = st.file_uploader("Select an Image.")
 
 
 # Defining a function to transform image to text (caption)
