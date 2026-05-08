@@ -3,7 +3,8 @@ import streamlit as st
 from transformers import pipeline
 
 # Setting headers and titles for the application
-st.set_page_config(page_title="Transform an Image to an Audio Story", page_icon="🧠")
+st.set_page_config(page_title="Transform an Image to an Audio Story", 
+                   page_icon="🧠")
 st.header("Transform Your Image into an Audio Story")
 
 # Adding a file uploader to the application
@@ -11,18 +12,21 @@ uploaded_file = st.file_uploader("Select an Image.")
 
 # Defining a function to transform image to text (caption)
 def img2text(url):
-    img2text_model = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
+    img2text_model = pipeline("image-to-text",
+                              model="Salesforce/blip-image-captioning-base")
     text = img2text_model(url)[0]["generated_text"]
     return text
 
 # Defining a function to generate a story from the extracted text
 def text2story(text):
-    story_model = pipeline("text-generation", model="pranavpsv/genre-story-generator-v2")
+    story_model = pipeline("text-generation", 
+                           model="pranavpsv/genre-story-generator-v2")
     prompt = f"Children's story (ages 3-10) about {text}. Focus on topic."
-    story_results = story_model(prompt, 
-                               min_new_tokens = 60, 
-                               max_new_tokens = 120,
-                               temperature = 0.8)
+    story_results = story_model(prompt,
+                                max_new_tokens=130, # Slightly over 100 words to allow for buffer
+                                num_beams=4,
+                                length_penalty=1.0, # Adjust this to 0.8 for shorter, 1.2 for longer
+                                early_stopping=True)
     
     full_text = story_results[0]['generated_text']
     story = full_text[len(prompt):].strip()
@@ -30,11 +34,12 @@ def text2story(text):
 
 # Defining a function to transform the generated story to speech/audio format
 def text2audio(story_text):
-    # Sometimes, the generated story is blank. As such, implement a validation mechanism to check if the story is blank.
+    # This pipeline occasionally crashes when there is an error in the input. This condition implements an error-handling feature when this occurs.
     if not story_text or len(story_text.strip()) < 5:
         return None
         
-    audio_model = pipeline("text-to-audio", model="Matthijs/mms-tts-eng")
+    audio_model = pipeline("text-to-audio", 
+                           model="Matthijs/mms-tts-eng")
     audio_data = audio_model(story_text)
     return audio_data
 
