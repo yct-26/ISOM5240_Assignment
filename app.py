@@ -19,32 +19,31 @@ def img2text(url):
 
 # Defining a function to generate a story from the extracted text
 def text2story(text):
-    story_model = pipeline("text-generation", 
-                           model="pranavpsv/genre-story-generator-v2")
-
-    # Writing a suitable prompt for story
-    prompt = f"Children's story (ages 3-10) about {text}. Focus on topic."
-    story = ""
-    attempts = 0
+   story_model = pipeline("text-generation", model="pranavpsv/genre-story-generator-v2")
     
-    # Try up to 2 times if the story comes back empty
-    while not story and attempts < 2:
-        story_results = story_model(prompt,
-                                    min_new_tokens=60,
-                                    max_new_tokens=130,
-                                    do_sample=True,
-                                    repetition_penalty=1.2, # FORCES the model to keep moving
-                                    no_repeat_ngram_size=2) # Prevents "The cat the cat the cat"
-        
-        full_text = story_results[0]['generated_text']
-        
-        # Extract story logic
-        if prompt in full_text:
-            story = full_text.split(prompt)[-1].strip()
-        else:
-            story = full_text.strip()
-        attempts += 1
-        
+    # We use a very standard "storytelling" prefix. 
+    # This triggers the model's "fairytale" training weights.
+    prompt = f"{text}. Once upon a time,"
+
+    story_results = story_model(
+        prompt,
+        min_new_tokens=70,
+        max_new_tokens=120,
+        do_sample=True,
+        # SETTINGS FOR A YOUNGER VOICE:
+        temperature=0.6,      # Lower temp makes it more "grounded" and less likely to ramble.
+        top_k=30,             # Sharp limit: Only allow the 30 most common words. 
+                              # This naturally forces a simpler vocabulary.
+        top_p=0.85,           # Focuses the model on high-probability "sensible" sentences.
+        repetition_penalty=1.2,
+        no_repeat_ngram_size=3
+    )
+
+    full_text = story_results[0]['generated_text']
+    
+    # Clean output
+    story = full_text.replace(prompt, "Once upon a time,").strip()
+    
     return story
 
 
