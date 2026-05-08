@@ -22,12 +22,15 @@ def text2story(text):
     story_pipe = pipeline("text-generation", 
                             model="pranavpsv/genre-story-generator-v2")
 
-    prompt = f"Write a story about {text}. The story should be suitable for children between the ages of 3-10."
+    prompt = f"Write a story suitable from children between the ages of 3-10 about {text}."
     story_results = story_pipe(prompt, 
                                min_new_tokens = 60,
                                max_new_tokens = 120,
                                temperature = 0.8)        # Temperature set to 0.8 to make the story more focused on caption.
-    story = story_results[0]['generated_text']
+    full_text = story_results[0]['generated_text']
+    
+    # Remove the prompt from the output so only the story remains
+    story = full_text.replace(prompt, "").strip()
     return story
 
 # Defining a function to transform story to speech/audio
