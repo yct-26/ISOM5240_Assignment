@@ -85,8 +85,9 @@ if uploaded_file is not None:
     # Conditional Play Audio button
     # Ensure that the story generation process was successful and audio data actually exists. If so, play the audio. Otherwise, display an error message.
     if st.button("Play Audio"):
-        audio_array = audio_data["audio"]
-        sample_rate = audio_data["sampling_rate"]
-        st.audio(audio_array, sample_rate=sample_rate)
-    else:
-        st.error("There was an error when generating the story. Please refresh and try again.")
+        if audio_data is not None:
+            audio_array = audio_data["audio"]
+            sample_rate = audio_data["sampling_rate"]
+            st.audio(audio_array, sample_rate=sample_rate)
+        else:
+            st.error("There was an error when generating the story. Please refresh and try again.")
