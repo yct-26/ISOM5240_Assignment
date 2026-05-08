@@ -18,17 +18,12 @@ def img2text(url):
 # Defining a function to generate a story from the extracted text
 def text2story(text):
     story_model = pipeline("text-generation", model="pranavpsv/genre-story-generator-v2")
-    # Writing a prompt to ensure that the generated story is suitable for the target audience
     prompt = f"Children's story (ages 3-10) about {text}. Focus on topic."
     story_results = story_model(prompt, 
-                               min_new_tokens = 60,      # Accounting for the tokens in the prompt, a range of 60-120 tokens should result in a story that is 50-100 words long.
-                               max_new_tokens = 120,
-                               temperature = 0.8)        # Temperature set to 0.8 to make the story more focused on caption.
+                               min_new_tokens = 60, 
+                               max_new_tokens = 120)
     
-    # Extracting the generated output
     full_text = story_results[0]['generated_text']
-    
-    # Remove the prompt from the output so only the story remains
     story = full_text[len(prompt):].strip()
     return story
 
@@ -50,21 +45,25 @@ def main():
 
     # 1) Image to Text
     scenario = img2text(uploaded_file.name)
-    st.write(f"**Scenario:** {scenario}")
-
+    
     # 2) Text to Story
     story_text = text2story(scenario)
-    st.write(f"**Story:** {story_text}")
-
+    
     # 3) Story to Audio
     audio_data = text2audio(story_text)
 
-    # 4) Play button
-    audio_array = audio_data["audio"]
-    sample_rate = audio_data["sampling_rate"]
-    st.audio(audio_array, sample_rate=sample_rate)
+    # Printing output
+    st.write(f"**Scenario:** {scenario}")
+    st.write(f"**Story:** {story_text}")    
+    return audio_data
 
 
 # Execute main() if there is an uploaded file
 if uploaded_file is not None:
-    main()
+    audio_data = main()
+
+    # Play audio only if the button is clicked
+    if st.button("Play Audio"):
+        audio_array = audio_data["audio"]
+        sample_rate = audio_data["sampling_rate"]
+        st.audio(audio_array, sample_rate=sample_rate)
