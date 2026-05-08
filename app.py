@@ -10,7 +10,7 @@ st.header("Turn Your Image to Audio Story")
 uploaded_file = st.file_uploader("Select an Image...")
 
 
-# Defining a function to transform image to text
+# Defining a function to transform image to text (caption)
 def img2text(url):
     image_to_text_model = pipeline("image-to-text", 
                                    model="Salesforce/blip-image-captioning-base")
@@ -21,7 +21,12 @@ def img2text(url):
 def text2story(text):
     story_pipe = pipeline("text-generation", 
                             model="pranavpsv/genre-story-generator-v2")
-    story_results = story_pipe(text)
+
+    prompt = f"Write a story about {text}. The story should be suitable for children between the ages of 3-10."
+    story_results = story_pipe(prompt, 
+                               min_new_tokens = 60,
+                               max_new_tokens = 120,
+                               temperature = 0.8)        # Temperature set to 0.8 to make the story more focused on caption.
     story = story_results[0]['generated_text']
     return story
 
