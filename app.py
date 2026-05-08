@@ -23,10 +23,11 @@ def text2story(text):
                            model="pranavpsv/genre-story-generator-v2")
     prompt = f"Children's story (ages 3-10) about {text}. Focus on topic."
     story_results = story_model(prompt,
+                                min_new_tokens = 60,
                                 max_new_tokens=130, # Slightly over 100 words to allow for buffer
-                                num_beams=4,
-                                length_penalty=1.0, # Adjust this to 0.8 for shorter, 1.2 for longer
-                                do_sample = True)
+                                do_sample = True, 
+                                no_repeat_ngram_size=2,  # Prevents looping
+                                repetition_penalty=1.2)
     
     full_text = story_results[0]['generated_text']
     story = full_text[len(prompt):].strip()
