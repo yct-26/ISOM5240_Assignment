@@ -47,24 +47,30 @@ def text2audio(story_text):
 # Defining a main function to execute all the sub-functions
 def main():    
     st.image(uploaded_file, use_container_width=True)
-    # Check if we already have the data in session state to avoid re-running
+        # Check if we already have the data in session state to avoid re-running
     if 'audio_data' not in st.session_state:
-        # Saving the uploaded file locally
-        bytes_data = uploaded_file.getvalue()
-        with open(uploaded_file.name, "wb") as file:
-            file.write(bytes_data)
-
-        # 1) Image to Text
-        scenario = img2text(uploaded_file.name)
-        st.session_state['scenario'] = scenario
-
-        # 2) Text to Story
-        story_text = text2story(scenario)
-        st.session_state['story_text'] = story_text
-
-        # 3) Story to Audio
-        audio_data = text2audio(story_text)
-        st.session_state['audio_data'] = audio_data
+        # Writing a status message to indicate the image is being processed
+        placeholder = st.empty()
+        placeholder.info("Processing image, please be patient...")
+        try:
+            # Saving the uploaded file locally
+            bytes_data = uploaded_file.getvalue()
+            with open(uploaded_file.name, "wb") as file:
+                file.write(bytes_data)
+    
+            # 1) Image to Text
+            scenario = img2text(uploaded_file.name)
+            st.session_state['scenario'] = scenario
+    
+            # 2) Text to Story
+            story_text = text2story(scenario)
+            st.session_state['story_text'] = story_text
+    
+            # 3) Story to Audio
+            audio_data = text2audio(story_text)
+            st.session_state['audio_data'] = audio_data
+        finally:
+            placeholder.empty()
     
     # Display the results from Session State
     st.write(f"**Scenario:** {st.session_state['scenario']}")
