@@ -74,7 +74,8 @@ if uploaded_file is not None:
     audio_data = main()
 
     # The conditional Play Audio button
-   if st.button("Play Audio"):
+    if st.button("Play Audio"):
+       
         # CHANGE 2: Ensure audio_data exists before trying to play it
         if audio_data is not None:
             audio_array = audio_data["audio"]
