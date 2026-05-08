@@ -25,13 +25,14 @@ def img2text(url):
 def text2story(text):
    story_model = pipeline("text-generation", 
                           model="pranavpsv/genre-story-generator-v2")
+   # Edit the prompt so that the generated story is suitable for children 
    prompt = f"Write a story for children about {text}:"
    story_results = story_model(prompt,
                               min_new_tokens=70,
                               max_new_tokens=120,
                               do_sample=True,
                               repetition_penalty=1)
-   # Removing the prompt from the generated output
+  # Removing the prompt from the generated output
    full_text = story_results[0]['generated_text']
    story = full_text.replace(prompt, "").strip()
    return story
