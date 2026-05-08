@@ -75,6 +75,12 @@ def main():
     return st.session_state['audio_data']
 
 
+# Defining a function to clear session state safely
+def clear_state():
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]
+
+
 # Execute main() if there is an uploaded file
 if uploaded_file is not None:
     audio_data = main()
@@ -86,10 +92,7 @@ if uploaded_file is not None:
         st.audio(audio_array, sample_rate=sample_rate)
 
     # Setting up an optional button to re-generate a story
-    if st.button("Start Over"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.rerun()
+    st.button("Start Over", on_click = clear_state)
 
 
 
