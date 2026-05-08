@@ -62,11 +62,13 @@ def main():
         # 2) Text to Story
         story_text = text2story(scenario)
         st.session_state['story_text'] = story_text
-        st.write(f"**Story:** {st.session_state['story_text']}")
 
         # 3) Story to Audio
         audio_data = text2audio(story_text)
-        st.session_state['audio_data'] = audio_data    
+        st.session_state['audio_data'] = audio_data
+
+    # Displaying generated story
+    st.write(f"**Story:** {st.session_state['story_text']}")
 
     # Returning audio_data from Session State
     return st.session_state['audio_data']
