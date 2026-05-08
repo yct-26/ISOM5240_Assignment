@@ -38,12 +38,12 @@ def text2story(text):
                               no_repeat_ngram_size=3
                           )
 
-    full_text = story_results[0]['generated_text']
+   full_text = story_results[0]['generated_text']
     
     # Clean output
-    story = full_text.replace(prompt, "Once upon a time,").strip()
+   story = full_text.replace(prompt, "Once upon a time,").strip()
     
-    return story
+   return story
 
 
 # Defining a function to transform the generated story to speech/audio format
