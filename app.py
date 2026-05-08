@@ -46,34 +46,54 @@ def text2audio(story_text):
 
 # Defining a main function to execute all the sub-functions
 def main():    
-    # Saving the uploaded file locally
-    bytes_data = uploaded_file.getvalue()
-    with open(uploaded_file.name, "wb") as file:
-        file.write(bytes_data)
-    st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
+    # Check if we already have the data in session state to avoid re-running
+    if 'audio_data' not in st.session_state:
+        # Saving the uploaded file locally
+        bytes_data = uploaded_file.getvalue()
+        with open(uploaded_file.name, "wb") as file:
+            file.write(bytes_data)
+        
+        st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
 
-    # 1) Image to Text
-    scenario = img2text(uploaded_file.name)
-    st.write(f"**Scenario:** {scenario}")
+        # 1) Image to Text
+        scenario = img2text(uploaded_file.name)
+        st.session_state['scenario'] = scenario
 
-    # 2) Text to Story
-    story_text = text2story(scenario)
-    st.write(f"**Story:** {story_text}")
+        # 2) Text to Story
+        story_text = text2story(scenario)
+        st.session_state['story_text'] = story_text
 
-    # 3) Story to Audio
-    audio_data = text2audio(story_text)
+        # 3) Story to Audio
+        audio_data = text2audio(story_text)
+        st.session_state['audio_data'] = audio_data
+        
+        # Clean up
+        if os.path.exists(uploaded_file.name):
+            os.remove(uploaded_file.name)
     
-    return audio_data
+    # Display the results from Session State
+    st.write(f"**Scenario:** {st.session_state['scenario']}")
+    st.write(f"**Story:** {st.session_state['story_text']}")
+
+    # Returning audio_data from Session State
+    return st.session_state['audio_data']
 
 
 # Execute main() if there is an uploaded file
 if uploaded_file is not None:
     audio_data = main()
-    # Setting up a Play button
+    
+    # Setting up a Play button for the generated text
     if st.button("Play Audio"):
         audio_array = audio_data["audio"]
         sample_rate = audio_data["sampling_rate"]
         st.audio(audio_array, sample_rate=sample_rate)
+
+    # Setting up an optional button to re-generate a story
+    if st.button("Start Over"):
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        st.rerun()
 
 
 
