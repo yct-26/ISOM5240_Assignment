@@ -57,7 +57,6 @@ def main():
         # 1) Image to Text
         scenario = img2text(uploaded_file.name)
         st.session_state['scenario'] = scenario
-        st.write(f"**Scenario:** {st.session_state['scenario']}")
 
         # 2) Text to Story
         story_text = text2story(scenario)
@@ -68,6 +67,7 @@ def main():
         st.session_state['audio_data'] = audio_data
 
     # Displaying generated story
+    st.write(f"**Scenario:** {st.session_state['scenario']}")
     st.write(f"**Story:** {st.session_state['story_text']}")
 
     # Returning audio_data from Session State
