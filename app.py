@@ -30,9 +30,14 @@ def text2story(text):
 
 # Defining a function to transform the generated story to speech/audio format
 def text2audio(story_text):
+    # Validate text length to prevent the narrow() error
+    if not story_text or len(story_text.strip()) < 5:
+        return None
+        
     audio_model = pipeline("text-to-audio", model="Matthijs/mms-tts-eng")
     audio_data = audio_model(story_text)
     return audio_data
+
 
 # Defining a main function to group all the functions together
 def main():    
@@ -69,7 +74,11 @@ if uploaded_file is not None:
     audio_data = main()
 
     # The conditional Play Audio button
-    if st.button("Play Audio"):
-        audio_array = audio_data["audio"]
-        sample_rate = audio_data["sampling_rate"]
-        st.audio(audio_array, sample_rate=sample_rate)
+   if st.button("Play Audio"):
+        # CHANGE 2: Ensure audio_data exists before trying to play it
+        if audio_data is not None:
+            audio_array = audio_data["audio"]
+            sample_rate = audio_data["sampling_rate"]
+            st.audio(audio_array, sample_rate=sample_rate)
+        else:
+            st.error("The generated story was too short to create audio.")
