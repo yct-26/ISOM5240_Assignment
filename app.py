@@ -26,10 +26,7 @@ def text2story(text):
                               min_new_tokens=70,
                               max_new_tokens=120,
                               do_sample=True,
-                              # SETTINGS FOR A YOUNGER VOICE:
-                              temperature=0.6,      # Lower temp makes it more "grounded" and less likely to ramble.
-                              repetition_penalty=1.2,
-                              no_repeat_ngram_size=3
+                              repetition_penalty=1.2
                           )
 
    full_text = story_results[0]['generated_text']
