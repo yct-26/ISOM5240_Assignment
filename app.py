@@ -17,16 +17,14 @@ uploaded_file = st.file_uploader("Select an Image.")
 # Defining a function to transform image to text (caption)
 def img2text(url):
     img2text_model = pipeline("image-to-text",
-                              model="Salesforce/blip-image-captioning-base",
-                              device = -1)
+                              model="Salesforce/blip-image-captioning-base")
     text = img2text_model(url)[0]["generated_text"]
     return text
 
 # Defining a function to generate a story from the extracted text
 def text2story(text):
    story_model = pipeline("text-generation", 
-                          model="pranavpsv/genre-story-generator-v2",
-                          device = -1)
+                          model="pranavpsv/genre-story-generator-v2")
    # Edit the prompt so that the generated story is suitable for children 
    prompt = f"Write a story for children about {text}:"
    story_results = story_model(prompt,
@@ -45,8 +43,7 @@ def text2audio(story_text):
     if not story_text or len(story_text.strip()) < 5:
         return None
     audio_model = pipeline("text-to-audio", 
-                           model="Matthijs/mms-tts-eng",
-                           device = -1)
+                           model="Matthijs/mms-tts-eng")
     audio_data = audio_model(story_text)
     return audio_data
 
