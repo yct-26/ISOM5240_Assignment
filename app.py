@@ -20,7 +20,7 @@ def img2text(url):
 # Defining a function to generate a story from the extracted text
 def text2story(text):
    story_model = pipeline("text-generation", model="pranavpsv/genre-story-generator-v2")
-   prompt = f"Write a story for children about {text}"
+   prompt = f"Write a story for children about {text}:"
 
    story_results = story_model(prompt,
                               min_new_tokens=70,
