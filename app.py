@@ -46,14 +46,14 @@ def text2audio(story_text):
 
 # Defining a main function to execute all the sub-functions
 def main():    
+    st.image(uploaded_file, use_container_width=True)
+    
     # Check if we already have the data in session state to avoid re-running
     if 'audio_data' not in st.session_state:
         # Saving the uploaded file locally
         bytes_data = uploaded_file.getvalue()
         with open(uploaded_file.name, "wb") as file:
             file.write(bytes_data)
-        
-        st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
 
         # 1) Image to Text
         scenario = img2text(uploaded_file.name)
