@@ -29,8 +29,8 @@ def text2audio(story_text):
     return audio_data
 
 
-# Main part to run the code
-if uploaded_file is not None:
+# Defining a main function to execute all the sub-functions
+def main():    
     scenario = img2text(uploaded_file.name)
     st.write(f"**Scenario:** {scenario}")
     story_text = text2story(scenario)
@@ -38,7 +38,12 @@ if uploaded_file is not None:
     audio_data = text2audio(story_text)
 
 
-    # Play button
+# Execute main() if there is an uploaded file
+if uploaded_file is not None:
+    main()
+
+
+# Setting up a Play button
 if st.button("Play Audio"):
     audio_array = audio_data["audio"]
     sample_rate = audio_data["sampling_rate"]
