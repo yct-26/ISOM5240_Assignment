@@ -1,3 +1,4 @@
+## Setup
 # Importing necessary packages for application
 import streamlit as st
 from transformers import pipeline
@@ -10,6 +11,9 @@ st.header("Transform Your Image into an Audio Story")
 # Adding a file uploader to the application
 uploaded_file = st.file_uploader("Select an Image.")
 
+
+
+## Defining Functions
 # Defining a function to transform image to text (caption)
 def img2text(url):
     img2text_model = pipeline("image-to-text",
@@ -32,7 +36,6 @@ def text2story(text):
    story = full_text.replace(prompt, "").strip()
    return story
 
-
 # Defining a function to transform the generated story to speech/audio format
 def text2audio(story_text):
     # This pipeline occasionally crashes when there is an error in its input. This condition implements an error-handling feature when this occurs.
@@ -42,7 +45,6 @@ def text2audio(story_text):
                            model="Matthijs/mms-tts-eng")
     audio_data = audio_model(story_text)
     return audio_data
-
 
 # Defining a main function to group all the functions together
 def main():    
@@ -74,16 +76,17 @@ def main():
     return st.session_state['audio_data']
 
 
-# Execute main() if there is an uploaded image file
+
+## Execution
+# Run main() if there is an uploaded image file
 if uploaded_file is not None:
     audio_data = main()
-
+  
     # Conditional Play Audio button
+    # Ensure that the story generation process was successful and audio data actually exists. If so, play the audio. Otherwise, display an error message.
     if st.button("Play Audio"):
-       
-        # Ensure that the story generation process was successful and audio data actually exists. If so, play the audio. Otherwise, display an error message.
-            audio_array = audio_data["audio"]
-            sample_rate = audio_data["sampling_rate"]
-            st.audio(audio_array, sample_rate=sample_rate)
-        else:
-            st.error("There was an error when generating the story. Please refresh and try again.")
+        audio_array = audio_data["audio"]
+        sample_rate = audio_data["sampling_rate"]
+        st.audio(audio_array, sample_rate=sample_rate)
+    else:
+        st.error("There was an error when generating the story. Please refresh and try again.")
