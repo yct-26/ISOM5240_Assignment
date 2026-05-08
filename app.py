@@ -1,8 +1,8 @@
-# Importing necessary packages
+# Importing necessary packages for application
 import streamlit as st
 from transformers import pipeline
 
-# Setting Headers and Titles for the Application
+# Setting headers and titles for the application
 st.set_page_config(page_title="Your Image to Audio Story", page_icon="🧠")
 st.header("Turn Your Image to Audio Story")
 
@@ -17,15 +17,15 @@ def img2text(url):
     text = image_to_text_model(url)[0]["generated_text"]
     return text
 
-# Defining a function to generate a story from text
+# Defining a function to generate a story from the extracted text
 def text2story(text):
     story_pipe = pipeline("text-generation", 
                             model="pranavpsv/genre-story-generator-v2")
 
-    # Editing prompt to ensure the generated story is suitable for the target audience
-    prompt = f"Write a story suitable from children between the ages of 3-10 about {text}."
+    # Writing a prompt to ensure that the generated story is suitable for the target audience
+    prompt = f"Write a story suitable for children between the ages of 3-10 years old about {text}."
     story_results = story_pipe(prompt, 
-                               min_new_tokens = 60,
+                               min_new_tokens = 60,      # An output range of 60-120 tokens generally results in a story that is 50-100 words long.
                                max_new_tokens = 120,
                                temperature = 0.8)        # Temperature set to 0.8 to make the story more focused on caption.
     
@@ -36,7 +36,7 @@ def text2story(text):
     story = full_text[len(prompt):].strip()
     return story
 
-# Defining a function to transform story to speech/audio
+# Defining a function to transform the generated story to speech/audio format
 def text2audio(story_text):
     audio_pipe = pipeline("text-to-audio", 
                           model="Matthijs/mms-tts-eng")
@@ -57,18 +57,16 @@ def main():
         # 1) Image to Text
         scenario = img2text(uploaded_file.name)
         st.session_state['scenario'] = scenario
+        st.write(f"**Scenario:** {st.session_state['scenario']}")
 
         # 2) Text to Story
         story_text = text2story(scenario)
         st.session_state['story_text'] = story_text
+        st.write(f"**Story:** {st.session_state['story_text']}")
 
         # 3) Story to Audio
         audio_data = text2audio(story_text)
-        st.session_state['audio_data'] = audio_data
-    
-    # Display the results from Session State
-    st.write(f"**Scenario:** {st.session_state['scenario']}")
-    st.write(f"**Story:** {st.session_state['story_text']}")
+        st.session_state['audio_data'] = audio_data    
 
     # Returning audio_data from Session State
     return st.session_state['audio_data']
