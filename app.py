@@ -9,22 +9,35 @@ st.header("Transform Your Image into an Audio Story")
 # Adding a file uploader to the application
 uploaded_file = st.file_uploader("Select an Image.")
 
+@st.cache_resource
+def load_pipelines():
+    # Adding device=0 if you have a GPU, otherwise leave as is for CPU
+    img2text_pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
+    
+    # Story generator
+    story_pipe = pipeline("text-generation", model="pranavpsv/genre-story-generator-v2")
+    
+    # TTS model
+    tts_pipe = pipeline("text-to-audio", model="Matthijs/mms-tts-eng")
+    
+    return img2text_pipe, story_pipe, tts_pipe
+
+# Initialize the models
+img2text_model, story_model, audio_model = load_pipelines()
+
+
+
 
 # Defining a function to transform image to text (caption)
 def img2text(url):
-    image_to_text_model = pipeline("image-to-text", 
-                                   model="Salesforce/blip-image-captioning-base")
-    text = image_to_text_model(url)[0]["generated_text"]
+    text = img2text_model(url)[0]["generated_text"]
     return text
 
 # Defining a function to generate a story from the extracted text
 def text2story(text):
-    story_pipe = pipeline("text-generation", 
-                          model="pranavpsv/genre-story-generator-v2")
-
     # Writing a prompt to ensure that the generated story is suitable for the target audience
     prompt = f"Children's story (ages 3-10) about {text}. Focus on topic."
-    story_results = story_pipe(prompt, 
+    story_results = story_model(prompt, 
                                min_new_tokens = 60,      # Accounting for the tokens in the prompt, a range of 60-120 tokens should result in a story that is 50-100 words long.
                                max_new_tokens = 120,
                                temperature = 0.8)        # Temperature set to 0.8 to make the story more focused on caption.
@@ -38,9 +51,7 @@ def text2story(text):
 
 # Defining a function to transform the generated story to speech/audio format
 def text2audio(story_text):
-    audio_pipe = pipeline("text-to-audio", 
-                          model="Matthijs/mms-tts-eng")
-    audio_data = audio_pipe(story_text)
+    audio_data = audio_model(story_text)
     return audio_data
 
 
