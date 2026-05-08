@@ -30,7 +30,8 @@ def text2story(text):
                               min_new_tokens=70,
                               max_new_tokens=120,
                               do_sample=True,
-                              repetition_penalty=1.2)
+                              repetition_penalty=1.2,
+                              temperature = 0.6)
    # Removing the prompt from the generated output
    full_text = story_results[0]['generated_text']
    story = full_text.replace(prompt, "").strip()
