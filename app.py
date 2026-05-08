@@ -30,7 +30,7 @@ def text2story(text):
 
 # Defining a function to transform the generated story to speech/audio format
 def text2audio(story_text):
-    # Validate text length to prevent the narrow() error
+    # Sometimes, the generated story is blank. As such, implement a validation mechanism to check if the story is blank.
     if not story_text or len(story_text.strip()) < 5:
         return None
         
@@ -82,4 +82,4 @@ if uploaded_file is not None:
             sample_rate = audio_data["sampling_rate"]
             st.audio(audio_array, sample_rate=sample_rate)
         else:
-            st.error("The generated story was too short to create audio.")
+            st.error("The generated story was too short to create audio. Please refresh and try again.")
