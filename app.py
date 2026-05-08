@@ -41,7 +41,7 @@ def text2story(text):
    full_text = story_results[0]['generated_text']
     
     # Clean output
-   story = full_text.replace(prompt).strip()
+   story = full_text.replace(prompt, "").strip()
     
    return story
 
