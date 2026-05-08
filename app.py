@@ -66,10 +66,6 @@ def main():
         # 3) Story to Audio
         audio_data = text2audio(story_text)
         st.session_state['audio_data'] = audio_data
-        
-        # Clean up
-        if os.path.exists(uploaded_file.name):
-            os.remove(uploaded_file.name)
     
     # Display the results from Session State
     st.write(f"**Scenario:** {st.session_state['scenario']}")
