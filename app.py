@@ -6,7 +6,7 @@ from transformers import pipeline
 # Setting headers and titles for the application
 st.set_page_config(page_title="Transform an Image to an Audio Story", 
                    page_icon="🧠")
-st.header("Transform Your Image into an Audio Story 🌈")
+st.header("Transform Your Image into an Audio Story 📖")
 
 # Adding a file uploader to the application
 uploaded_file = st.file_uploader("Select an Image.")
